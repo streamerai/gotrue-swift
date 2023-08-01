@@ -1,15 +1,15 @@
 import Foundation
 import KeychainAccess
 
-struct StoredSession: Codable {
-  var session: Session
-  var expirationDate: Date
+public struct StoredSession: Codable {
+  public var session: Session
+  public var expirationDate: Date
 
-  var isValid: Bool {
+  public var isValid: Bool {
     expirationDate > Date().addingTimeInterval(60)
   }
 
-  init(session: Session, expirationDate: Date? = nil) {
+  public init(session: Session, expirationDate: Date? = nil) {
     self.session = session
     self.expirationDate = expirationDate ?? Date().addingTimeInterval(session.expiresIn)
   }
@@ -58,18 +58,18 @@ actor SessionManager {
   }
 }
 
-extension GoTrueLocalStorage {
-  fileprivate func getSession() throws -> StoredSession? {
+public extension GoTrueLocalStorage {
+  func getSession() throws -> StoredSession? {
     try retrieve(key: "supabase.session").flatMap {
       try JSONDecoder.goTrue.decode(StoredSession.self, from: $0)
     }
   }
 
-  fileprivate func storeSession(_ session: StoredSession) throws {
+  func storeSession(_ session: StoredSession) throws {
     try store(key: "supabase.session", value: JSONEncoder.goTrue.encode(session))
   }
 
-  fileprivate func deleteSession() {
+  func deleteSession() {
     try? remove(key: "supabase.session")
   }
 }
