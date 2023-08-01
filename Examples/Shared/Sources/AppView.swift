@@ -16,6 +16,10 @@ struct AppView: View {
             NavigationLink("Auth with Email and Password") {
               AuthWithEmailAndPasswordView()
             }
+
+            NavigationLink("Sign in with Apple") {
+              SignInWithAppleView()
+            }
           }
           .listStyle(.plain)
           .navigationTitle("Examples")
@@ -26,7 +30,7 @@ struct AppView: View {
       ProgressView()
         .task {
           await client.initialize()
-          self.clientInitialized = true
+          clientInitialized = true
         }
     }
   }
@@ -38,7 +42,7 @@ struct AppView: View {
   }
 }
 
-func stringfy<T: Codable>(_ value: T) -> String {
+func stringfy(_ value: some Codable) -> String {
   let encoder = JSONEncoder()
   encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
   let data = try? encoder.encode(value)
